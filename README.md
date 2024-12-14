@@ -1,10 +1,11 @@
-# Web Subdomain Search and Discovery Helper
+# Web Subdomain Admin Search and Discovery Helper
 
-Web Attack is a powerful tool designed for web penetration testing and security analysis. It allows users to conduct subdomain discovery to help improve the security posture of websites and web applications.
+Web Attack is a powerful tool designed for web penetration testing and security analysis. It allows users to conduct subdomain and Admin page discovery to help improve the security posture of websites and web applications.
 
 ## Features
 
 - Subdomain Discovery: Discover subdomains of a given domain to map out potential attack vectors.
+- Admin Path Discovery: Scans for common admin paths and reports any accessible ones.
 - Clean Terminal Output: Clear the terminal screen automatically on startup for better readability.
 - Cross-platform: Works on Windows, Linux, and macOS.
 
