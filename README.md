@@ -25,7 +25,7 @@ Web Attack is a powerful tool designed for web penetration testing and security 
    ```bash
    $ git clone https://github.com/Cyrus-007-BD/WSSDH.git
    ```
-3. Go to WSSDH directory:
+3. Go to WSASDH directory:
    ```bash
    $ cd WSSDH
    ```
