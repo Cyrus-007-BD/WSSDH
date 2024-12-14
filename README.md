@@ -27,7 +27,7 @@ Web Attack is a powerful tool designed for web penetration testing and security 
    ```
 3. Go to WSASDH directory:
    ```bash
-   $ cd WSSDH
+   $ cd WSASDH
    ```
 4. Run the program:
    ```bash
