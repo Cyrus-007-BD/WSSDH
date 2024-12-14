@@ -1,9 +1,11 @@
-import requests
 import os
+import sys
 import platform
-from bs4 import BeautifulSoup
-import re
 import threading
+import dns.resolver # type: ignore
+import requests
+from bs4 import BeautifulSoup # type: ignore
+import re
 from queue import Queue
 from colorama import init, Fore
 
@@ -78,6 +80,37 @@ def fetch_duckduckgo(domain):
     except Exception as e:
         print(Fore.RED + f"[-] Error fetching DuckDuckGo: {e}")
 
+def fetch_wordlist_subdomains(domain, wordlist_file="subdomains.txt"):
+    """Fetch subdomains from a local wordlist using DNS resolution"""
+    if not os.path.isfile(wordlist_file):
+        print(Fore.RED + f"[!] Wordlist file '{wordlist_file}' not found.")
+        return
+
+    try:
+        with open(wordlist_file, 'r') as f:
+            wordlist = [line.strip() for line in f if line.strip()]
+    except Exception as e:
+        print(Fore.RED + f"[!] Error reading the wordlist file: {e}")
+        return
+
+    print(Fore.CYAN + "[INFO] Enumerating subdomains using DNS resolution...")
+
+    for sub in wordlist:
+        subdomain = f"{sub}.{domain}"
+        try:
+            answers = dns.resolver.resolve(subdomain, 'A')
+            for answer in answers:
+                with lock:
+                    subdomains.add(subdomain)
+                print(Fore.GREEN + f"[+] Found: {subdomain} -> {answer}")
+        except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer):
+            continue
+        except dns.resolver.LifetimeTimeout:
+            print(Fore.RED + f"[!] Timeout querying {subdomain}")
+        except KeyboardInterrupt:
+            print("\n[!] Stopped by user.")
+            sys.exit(0)
+
 def enumerate_subdomains(domain):
     """Main function to enumerate subdomains using multiple sources"""
     print(Fore.CYAN + f"[INFO] Enumerating subdomains for: {domain}")
@@ -91,6 +124,9 @@ def enumerate_subdomains(domain):
         thread = threading.Thread(target=source, args=(domain,))
         threads.append(thread)
         thread.start()
+
+    # Start DNS-based subdomain enumeration
+    fetch_wordlist_subdomains(domain)
 
     # Wait for all threads to complete
     for thread in threads:
@@ -120,21 +156,21 @@ def print_banner():
     print(Fore.RED + banner)
 
 def clear_terminal():
-    # Check the system's platform and run the appropriate command to clear the terminal
+    # Clear the terminal based on the platform
     system = platform.system().lower()
     if system == "windows":
-        os.system('cls')  # Clears the terminal on Windows
+        os.system('cls')
     else:
-        os.system('clear')  # Clears the terminal on Linux/MacOS
+        os.system('clear')
 
 if __name__ == "__main__":
     import argparse
 
-    clear_terminal() # Clear the terminal before displaying the banner
-    print_banner()   # Display the banner 
+    clear_terminal()
+    print_banner()
 
     parser = argparse.ArgumentParser(
-        description="Author - Cyrus_007\n A subdomain enumeration tool without API keys.",
+        description="Author - Cyrus_007\nA subdomain enumeration tool without API keys.",
         epilog="Example usage:\n  python3 WSSDH.py example.com",
         usage="python3 WSSDH.py [domain]",
         formatter_class=argparse.RawTextHelpFormatter
@@ -146,6 +182,4 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
-    print(f"Enumerating subdomains for: {args.domain}")
-
     enumerate_subdomains(args.domain)
