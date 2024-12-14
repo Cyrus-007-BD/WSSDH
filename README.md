@@ -1,9 +1,4 @@
-# <h1>Web Subdomain Search and Discovery Helper<h1>
-
-
-pip install requests beautifulsoup4 colorama
-
-# Web Attack - Penetration Testing & Security
+# Web Subdomain Search and Discovery Helper
 
 Web Attack is a powerful tool designed for web penetration testing and security analysis. It allows users to perform various web attack simulations, identify vulnerabilities, and conduct subdomain discovery to help improve the security posture of websites and web applications.
 
@@ -24,10 +19,13 @@ Web Attack is a powerful tool designed for web penetration testing and security 
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/web-attack.git
-
-   ```bash
-   cd WSSDH
-
    
+   pip install requests beautifulsoup4 colorama
+
+   git clone https://github.com/yourusername/web-attack.git
+   
+   cd WSSDH
+   
+   python3 WSSDH.py [Domain]
+
      
